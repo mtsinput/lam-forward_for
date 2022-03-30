@@ -8,8 +8,9 @@ RUN sed -i.bkp 's/\%a/\%\{X-Forwarded-For\}i/g' /etc/apache2/apache2.conf
 
 WORKDIR /var/lib/ldap-account-manager/config
 
-ENTRYPOINT ["/usr/bin/dumb-init" "--"]
+# start Apache when container starts
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD [ "/usr/local/bin/start.sh" ]
 
-CMD ["/usr/local/bin/start.sh"]
-
-HEALTHCHECK &{["CMD-SHELL" "wget -qO- http://localhost/lam/ | grep -q '<title>LDAP Account Manager</title>'"] "1m0s" "10s" "0s" '\x00'}
+#HEALTHCHECK --interval=1m --timeout=10s \
+#    CMD wget -qO- http://localhost/lam/ | grep -q '<title>LDAP Account Manager</title>'
